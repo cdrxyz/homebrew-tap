@@ -41,7 +41,7 @@ jobs:
           [[ "$SHA256" =~ ^[0-9a-f]{64}$ ]]
 
       - name: Checkout tap
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Update formula
         env:
