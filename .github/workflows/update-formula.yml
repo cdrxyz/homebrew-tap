@@ -1,0 +1,71 @@
+name: Update Formula
+
+on:
+  workflow_dispatch:
+    inputs:
+      formula:
+        description: Formula name to update
+        required: true
+        type: string
+      version:
+        description: Release version without leading v
+        required: true
+        type: string
+      url:
+        description: Release tarball URL
+        required: true
+        type: string
+      sha256:
+        description: Release tarball SHA256
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: macos-latest
+    steps:
+      - name: Validate inputs
+        env:
+          FORMULA: ${{ inputs.formula }}
+          VERSION: ${{ inputs.version }}
+          URL: ${{ inputs.url }}
+          SHA256: ${{ inputs.sha256 }}
+        run: |
+          test "$FORMULA" = "blastshield"
+          [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          EXPECTED_URL="https://github.com/cdrxyz/blastshield/releases/download/v${VERSION}/blastshield-${VERSION}.tar.gz"
+          test "$URL" = "$EXPECTED_URL"
+          [[ "$SHA256" =~ ^[0-9a-f]{64}$ ]]
+
+      - name: Checkout tap
+        uses: actions/checkout@v4
+
+      - name: Update formula
+        env:
+          VERSION: ${{ inputs.version }}
+          URL: ${{ inputs.url }}
+          SHA256: ${{ inputs.sha256 }}
+        run: |
+          perl -pi -e 's{^  url ".*"}{  url "$ENV{URL}"}' Formula/blastshield.rb
+          perl -pi -e 's/^  version ".*"/  version "$ENV{VERSION}"/' Formula/blastshield.rb
+          perl -pi -e 's/^  sha256 ".*"/  sha256 "$ENV{SHA256}"/' Formula/blastshield.rb
+
+      - name: Check formula style
+        run: brew style Formula/blastshield.rb
+
+      - name: Commit formula update
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/blastshield.rb
+          if git diff --staged --quiet; then
+            echo "Formula is already up to date."
+            exit 0
+          fi
+          git commit -m "blastshield $VERSION"
+          git push
