@@ -60,8 +60,8 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "eizus"
+          git config user.email "hello@cdr.xyz"
           git add Formula/blastshield.rb
           if git diff --staged --quiet; then
             echo "Formula is already up to date."
