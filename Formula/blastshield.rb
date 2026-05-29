@@ -4,9 +4,9 @@
 class Blastshield < Formula
   desc "Sandbox AI coding agents against destructive cloud CLI commands"
   homepage "https://cdrxyz.github.io/blastshield"
-  url "https://github.com/cdrxyz/blastshield/releases/download/v0.1.7/blastshield-0.1.7.tar.gz"
-  version "0.1.7"
-  sha256 "139106ffe2f81544d0a9cc27baa4786791b2924dee956df80801caddc8031b3a"
+  url "https://github.com/cdrxyz/blastshield/releases/download/v0.1.8/blastshield-0.1.8.tar.gz"
+  version "0.1.8"
+  sha256 "91e530b2c2a91fa33d4b1d77d2e99fcbd1e947040585c086c335a600d2d2e3fb"
   license "Apache-2.0"
 
   depends_on "bash"
